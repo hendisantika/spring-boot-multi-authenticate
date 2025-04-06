@@ -33,3 +33,12 @@ curl --location 'http://localhost:8080/api/internal/health' \
 --header 'x-api-key: jujutsu.kaisen'
 ```
 
+### Image Screenshots
+
+Login Page
+
+![Login Page](img/login.png "Login Page")
+
+Home Page
+
+![Home Page](img/welcome.png "Home Page")
