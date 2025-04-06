@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,4 +47,29 @@ public class SpringSecurityConfig {
 
         return http.build();
     }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain filterChainWebApplication(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authz -> authz
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/**").authenticated()
+                .anyRequest().authenticated()
+        );
+
+        http.formLogin(authz -> authz
+                .loginPage("/login").permitAll()
+                .loginProcessingUrl("/login")
+        );
+
+        http.logout(authz -> authz
+                .deleteCookies("JSESSIONID")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+        );
+
+        http.csrf(AbstractHttpConfigurer::disable);
+
+        return http.build();
+    }
+
 }
