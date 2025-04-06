@@ -22,4 +22,9 @@ public class GreetingsController {
     public ResponseEntity<String> getPublicGreetings() {
         return ResponseEntity.ok("Greetings from a public endpoint!");
     }
+
+    @GetMapping("/protected/greetings")
+    public ResponseEntity<String> getProtectedGreetings() {
+        return ResponseEntity.ok("Greetings from a protected endpoint!");
+    }
 }
