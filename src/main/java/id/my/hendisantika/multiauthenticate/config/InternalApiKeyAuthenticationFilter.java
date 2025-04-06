@@ -71,7 +71,6 @@ public class InternalApiKeyAuthenticationFilter implements Filter {
         Map<String, Object> response = Map.of("message", "SC_UNAUTHORIZED");
         String responseBody = new ObjectMapper().writeValueAsString(response);
         httpServletResponse.getWriter().write(responseBody);
-
     }
 
 }
