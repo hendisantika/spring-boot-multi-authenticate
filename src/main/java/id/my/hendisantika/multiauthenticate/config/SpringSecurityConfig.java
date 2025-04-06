@@ -2,8 +2,14 @@ package id.my.hendisantika.multiauthenticate.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,4 +32,18 @@ public class SpringSecurityConfig {
     @Value("${internal.api-key}")
     private String internalApiKey;
 
+    @Bean
+    @Order(1)
+    public SecurityFilterChain filterChainPrivate(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/api/internal/**")
+                .addFilterBefore(new InternalApiKeyAuthenticationFilter(internalApiKey), ChannelProcessingFilter.class)
+                .exceptionHandling((auth) -> {
+                    auth.authenticationEntryPoint(apiAuthenticationErrEntrypoint);
+                })
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable);
+
+        return http.build();
+    }
 }
